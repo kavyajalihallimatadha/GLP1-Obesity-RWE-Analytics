@@ -39,8 +39,8 @@ JOIN gold_patient_cohort c ON f.ptid = c.ptid AND f.fill_date BETWEEN c.index_da
 spark.sql(f"""
 CREATE OR REPLACE TABLE work_episodes AS
 WITH a AS (
-  SELECT *, date_add(fill_date, days_supply) AS runout,
-         MAX(date_add(fill_date, days_supply)) OVER (
+  SELECT *, date_add(fill_date, CAST(days_supply AS INT)) AS runout,
+         MAX(date_add(fill_date, CAST(days_supply AS INT))) OVER (
              PARTITION BY ptid, product_key ORDER BY fill_date, clmid
              ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS prev_runout
   FROM work_cohort_fills),
